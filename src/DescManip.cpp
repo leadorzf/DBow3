@@ -87,7 +87,7 @@ void DescManip::meanValue(const std::vector<cv::Mat> &descriptors,
 }
 
 // --------------------------------------------------------------------------
-static  inline uint32_t distance_8uc1(const cv::Mat &a, const cv::Mat &b);
+// static  inline uint32_t distance_8uc1(const cv::Mat &a, const cv::Mat &b);
 
 double DescManip::distance(const cv::Mat &a,  const cv::Mat &b)
 {
