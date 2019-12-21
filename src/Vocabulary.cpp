@@ -893,7 +893,7 @@ void Vocabulary::transform(const cv::Mat &feature,
       {
           auto const  &nodes = m_nodes[final_id].children;
           uint64_t best_d = std::numeric_limits<uint64_t>::max();
-          int idx=0,bestidx=0;
+          int idx=0;//,bestidx=0;
            for(const auto  &id:nodes)
           {
               //compute distance
@@ -903,7 +903,7 @@ void Vocabulary::transform(const cv::Mat &feature,
               {
                   best_d = dist;
                   final_id = id;
-                  bestidx=idx;
+                  // bestidx=idx;
               }
               idx++;
           }
@@ -912,27 +912,27 @@ void Vocabulary::transform(const cv::Mat &feature,
    }
   else
   {
-	  do
-	  {
-		  auto const  &nodes = m_nodes[final_id].children;
-		  uint64_t best_d = std::numeric_limits<uint64_t>::max();
-		  int idx = 0, bestidx = 0;
-		  for (const auto &id : nodes)
-		  {
-			  //compute distance
-			  //  std::cout<<idx<< " "<<id<<" "<< m_nodes[id].descriptor<<std::endl;
-			  uint64_t dist = DescManip::distance(feature, m_nodes[id].descriptor);
-			  //std::cout << id << " " << dist << " " << best_d << std::endl;
-			  if (dist < best_d)
-			  {
-				  best_d = dist;
-				  final_id = id;
-				  bestidx = idx;
-			  }
-			  idx++;
-		  }
-		  // std::cout<<bestidx<<" "<<final_id<<" d:"<<best_d<<" "<<m_nodes[final_id].descriptor<<  std::endl<<std::endl;
-	  } while (!m_nodes[final_id].isLeaf());
+      do
+      {
+          auto const  &nodes = m_nodes[final_id].children;
+          uint64_t best_d = std::numeric_limits<uint64_t>::max();
+          int idx = 0;//, bestidx = 0;
+          for (const auto &id : nodes)
+          {
+              //compute distance
+              //  std::cout<<idx<< " "<<id<<" "<< m_nodes[id].descriptor<<std::endl;
+              uint64_t dist = DescManip::distance(feature, m_nodes[id].descriptor);
+              //std::cout << id << " " << dist << " " << best_d << std::endl;
+              if (dist < best_d)
+              {
+                  best_d = dist;
+                  final_id = id;
+                  // bestidx = idx;
+              }
+              idx++;
+          }
+          // std::cout<<bestidx<<" "<<final_id<<" d:"<<best_d<<" "<<m_nodes[final_id].descriptor<<  std::endl<<std::endl;
+      } while (!m_nodes[final_id].isLeaf());
   }
 //      uint64_t ret=0;
 //      const uchar *pb = b.ptr<uchar>();
@@ -1087,12 +1087,12 @@ void Vocabulary::load(const std::string &filename)
     if (!ifile) throw std::runtime_error("Vocabulary::load Could not open file :"+filename+" for reading");
     if(!load(ifile)) {
         if ( filename.find(".txt")!=std::string::npos) {
-	    load_fromtxt(filename);
-	} else {
-	    cv::FileStorage fs(filename.c_str(), cv::FileStorage::READ);
-	    if(!fs.isOpened()) throw std::string("Could not open file ") + filename;
-	    load(fs);
-	}
+        load_fromtxt(filename);
+    } else {
+        cv::FileStorage fs(filename.c_str(), cv::FileStorage::READ);
+        if(!fs.isOpened()) throw std::string("Could not open file ") + filename;
+        load(fs);
+    }
     }
 }
 
@@ -1247,7 +1247,7 @@ void Vocabulary::toStream(  std::ostream &out_str, bool compressed) const throw(
         if ( total_size%chunkSize!=0) nChunks++;
         out_str.write((char*)&nChunks, sizeof(nChunks));
         //start compressing the chunks
-		while (total_size != 0){
+        while (total_size != 0){
             int readSize=chunkSize;
             if (total_size<chunkSize) readSize=total_size;
             aux_stream.read(&input[0],readSize);
@@ -1363,7 +1363,7 @@ void Vocabulary::fromStream(  std::istream &str )   throw(std::exception){
         //read how many chunks are there
         uint32_t nChunks;
         str.read((char*)&nChunks,sizeof(nChunks));
-        for(int i=0;i<nChunks;i++){
+        for(uint32_t i=0;i<nChunks;i++){
             str.read(&input[0],9);
             int c=qlz_size_compressed(&input[0]);
             str.read(&input[9],c-9);
