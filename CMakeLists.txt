@@ -44,7 +44,7 @@ endif()
 
 #
 OPTION(BUILD_UTILS	"Set to OFF to not build utils" ON)
-OPTION(USE_CONTRIB 	"Set to ON if contrib are installed" OFF)
+OPTION(USE_CONTRIB 	"Set to ON if contrib are installed" ON)
 OPTION(BUILD_SHARED_LIBS 	"Set to OFF to build static libraries" ON)
 
 # ----------------------------------------------------------------------------
@@ -216,6 +216,7 @@ SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${EXTRA_EXE_LI
 
 
 
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include )
 #------------------------------------------------
 # DIRS
 #------------------------------------------------
@@ -225,7 +226,7 @@ ADD_SUBDIRECTORY(utils)
 # ENDIF()
 
 # IF (BUILD_TESTS)
-ADD_SUBDIRECTORY(tests)
+# ADD_SUBDIRECTORY(tests)
 # ENDIF()
 
 
