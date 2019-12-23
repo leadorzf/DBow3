@@ -1,6 +1,7 @@
-#ifndef DBoW3_TIMERS_H
-#define DBoW3_TIMERS_H
+// #ifndef DBoW3_TIMERS_H
+// #define DBoW3_TIMERS_H
 
+#pragma once
 
 #include <chrono>
 #include <string>
@@ -119,4 +120,4 @@ struct Timer{
 }
 
 
-#endif
+// #endif

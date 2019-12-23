@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T_SCORING_OBJECT__
-#define __D_T_SCORING_OBJECT__
+// #ifndef __D_T_SCORING_OBJECT__
+// #define __D_T_SCORING_OBJECT__
 
+#pragma once
 #include "BowVector.h"
 #include "exports.h"
 namespace  DBoW3 {
@@ -91,5 +92,5 @@ class __SCORING_CLASS(DotProductScoring, false, L1);
   
 } // namespace DBoW3
 
-#endif
+// #endif
 

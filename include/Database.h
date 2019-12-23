@@ -8,9 +8,10 @@
  *
  */
  
-#ifndef __D_T_DATABASE__
-#define __D_T_DATABASE__
+// #ifndef __D_T_DATABASE__
+// #define __D_T_DATABASE__
 
+#pragma once
 #include <vector>
 #include <numeric>
 #include <fstream>
@@ -353,4 +354,4 @@ protected:
 
 } // namespace DBoW3
 
-#endif
+// #endif

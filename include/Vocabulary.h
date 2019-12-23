@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T__VOCABULARY__
-#define __D_T__VOCABULARY__
+// #ifndef __D_T__VOCABULARY__
+// #define __D_T__VOCABULARY__
 
+#pragma once
 #include <cassert>
 
 #include <vector>
@@ -490,4 +491,4 @@ public:
 
 } // namespace DBoW3
 
-#endif
+// #endif

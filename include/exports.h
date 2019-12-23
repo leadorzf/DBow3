@@ -28,9 +28,10 @@ or implied, of Rafael Muñoz Salinas.
  
 
 
-#ifndef __DBOW_CORE_TYPES_H__
-#define __DBOW_CORE_TYPES_H__
+// #ifndef __DBOW_CORE_TYPES_H__
+// #define __DBOW_CORE_TYPES_H__
  
+#pragma once
 #if !defined _CRT_SECURE_NO_DEPRECATE && _MSC_VER > 1300
 #define _CRT_SECURE_NO_DEPRECATE /* to avoid multiple Visual Studio 2005 warnings */
 #endif
@@ -48,4 +49,4 @@ or implied, of Rafael Muñoz Salinas.
 
 
 #define  DBOW_VERSION "3.0.0"
-#endif
+// #endif

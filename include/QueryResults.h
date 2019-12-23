@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T_QUERY_RESULTS__
-#define __D_T_QUERY_RESULTS__
+// #ifndef __D_T_QUERY_RESULTS__
+// #define __D_T_QUERY_RESULTS__
 
+#pragma once
 #include <vector>
 #include "exports.h"
 namespace DBoW3 {
@@ -201,5 +202,5 @@ inline void QueryResults::scaleScores(double factor)
 
 } // namespace TemplatedBoW
   
-#endif
+// #endif
 

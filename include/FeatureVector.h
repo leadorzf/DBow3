@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T_FEATURE_VECTOR__
-#define __D_T_FEATURE_VECTOR__
+// #ifndef __D_T_FEATURE_VECTOR__
+// #define __D_T_FEATURE_VECTOR__
 
+#pragma once
 #include "BowVector.h"
 #include <map>
 #include <vector>
@@ -51,5 +52,5 @@ public:
 
 } // namespace DBoW3
 
-#endif
+// #endif
 

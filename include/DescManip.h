@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T_DESCMANIP__
-#define __D_T_DESCMANIP__
+// #ifndef __D_T_DESCMANIP__
+// #define __D_T_DESCMANIP__
 
+#pragma once
 #include <opencv2/core/core.hpp>
 #include <vector>
 #include <string>
@@ -96,4 +97,4 @@ uint32_t DescManip::distance_8uc1(const cv::Mat &a, const cv::Mat &b){
 }
 } // namespace DBoW3
 
-#endif
+// #endif

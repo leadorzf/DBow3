@@ -7,9 +7,10 @@
  *
  */
 
-#ifndef __D_T_BOW_VECTOR__
-#define __D_T_BOW_VECTOR__
+// #ifndef __D_T_BOW_VECTOR__
+// #define __D_T_BOW_VECTOR__
 
+#pragma once
 #include <map>
 #include <vector>
 #include "exports.h"
@@ -94,4 +95,4 @@ public:
 
 } // namespace DBoW3
 
-#endif
+// #endif
