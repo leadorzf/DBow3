@@ -25,9 +25,30 @@
 #include "ScoringObject.h"
 #include <limits>
 namespace DBoW3 {
+
+/// Weighting type
+enum WeightingType
+{
+  TF_IDF,
+  TF,
+  IDF,
+  BINARY
+};
+
+/// Scoring type
+enum ScoringType
+{
+  L1_NORM,
+  L2_NORM,
+  CHI_SQUARE,
+  KL,
+  BHATTACHARYYA,
+  DOT_PRODUCT
+};
+
 ///   Vocabulary
 class DBOW_API Vocabulary
-{		
+{       
 friend class FastSearch;
 public:
   
