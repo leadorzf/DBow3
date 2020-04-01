@@ -841,7 +841,7 @@ void Vocabulary::transform(const TDescriptor &feature,
     {
       auto const &nodes = m_nodes[final_id].children;
       uint64_t best_d = std::numeric_limits<uint64_t>::max();
-      int idx = 0, bestidx = 0;
+      int idx = 0;
       for (const auto &id : nodes)
       {
         //compute distance
@@ -851,7 +851,6 @@ void Vocabulary::transform(const TDescriptor &feature,
         {
           best_d = dist;
           final_id = id;
-          bestidx = idx;
         }
         idx++;
       }
@@ -864,7 +863,7 @@ void Vocabulary::transform(const TDescriptor &feature,
     {
       auto const &nodes = m_nodes[final_id].children;
       uint64_t best_d = std::numeric_limits<uint64_t>::max();
-      int idx = 0, bestidx = 0;
+      int idx = 0;
       for (const auto &id : nodes)
       {
         //compute distance
@@ -875,7 +874,6 @@ void Vocabulary::transform(const TDescriptor &feature,
         {
           best_d = dist;
           final_id = id;
-          bestidx = idx;
         }
         idx++;
       }
