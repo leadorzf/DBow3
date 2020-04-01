@@ -24,66 +24,98 @@
 using namespace DBoW3;
 using namespace std;
 
-
 //command line parser
-class CmdLineParser{int argc; char **argv; public: CmdLineParser(int _argc,char **_argv):argc(_argc),argv(_argv){}  bool operator[] ( string param ) {int idx=-1;  for ( int i=0; i<argc && idx==-1; i++ ) if ( string ( argv[i] ) ==param ) idx=i;    return ( idx!=-1 ) ;    } string operator()(string param,string defvalue="-1"){int idx=-1;    for ( int i=0; i<argc && idx==-1; i++ ) if ( string ( argv[i] ) ==param ) idx=i; if ( idx==-1 ) return defvalue;   else  return ( argv[  idx+1] ); }};
+class CmdLineParser
+{
+    int argc;
+    char **argv;
 
+public:
+    CmdLineParser(int _argc, char **_argv) : argc(_argc), argv(_argv) {}
+    bool operator[](string param)
+    {
+        int idx = -1;
+        for (int i = 0; i < argc && idx == -1; i++)
+            if (string(argv[i]) == param)
+                idx = i;
+        return (idx != -1);
+    }
+    string operator()(string param, string defvalue = "-1")
+    {
+        int idx = -1;
+        for (int i = 0; i < argc && idx == -1; i++)
+            if (string(argv[i]) == param)
+                idx = i;
+        if (idx == -1)
+            return defvalue;
+        else
+            return (argv[idx + 1]);
+    }
+};
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 // extended surf gives 128-dimensional vectors
 const bool EXTENDED_SURF = false;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void wait()
 {
-    cout << endl << "Press enter to continue" << endl;
+    cout << endl
+         << "Press enter to continue" << endl;
     getchar();
 }
 
-
-vector<string> readImagePaths(int argc,char **argv,int start){
+vector<string> readImagePaths(int argc, char **argv, int start)
+{
     vector<string> paths;
-    for(int i=start;i<argc;i++)    paths.push_back(argv[i]);
-        return paths;
+    for (int i = start; i < argc; i++)
+        paths.push_back(argv[i]);
+    return paths;
 }
 
-vector< cv::Mat  >  loadFeatures( std::vector<string> path_to_images,string descriptor="") {
+vector<vector<TDescriptor>> loadFeatures(std::vector<string> path_to_images, string descriptor = "") throw(std::exception)
+{
     //select detector
     cv::Ptr<cv::Feature2D> fdetector;
-    if (descriptor=="orb")        fdetector=cv::ORB::create();
-    else if (descriptor=="brisk") fdetector=cv::BRISK::create();
+    if (descriptor == "orb")
+        fdetector = cv::ORB::create();
+    else if (descriptor == "brisk")
+        fdetector = cv::BRISK::create();
 #ifdef OPENCV_VERSION_3
-    else if (descriptor=="akaze") fdetector=cv::AKAZE::create();
+    else if (descriptor == "akaze")
+        fdetector = cv::AKAZE::create();
 #endif
 #ifdef USE_CONTRIB
-    else if(descriptor=="surf" )  fdetector=cv::xfeatures2d::SURF::create(400, 4, 2, EXTENDED_SURF);
+    else if (descriptor == "surf")
+        fdetector = cv::xfeatures2d::SURF::create(400, 4, 2, EXTENDED_SURF);
 #endif
 
-    else throw std::runtime_error("Invalid descriptor");
+    else
+        throw std::runtime_error("Invalid descriptor");
     assert(!descriptor.empty());
-    vector<cv::Mat>    features;
-
+    vector<vector<TDescriptor>> features;
 
     cout << "Extracting   features..." << endl;
-    for(size_t i = 0; i < path_to_images.size(); ++i)
+    for (size_t i = 0; i < path_to_images.size(); ++i)
     {
         vector<cv::KeyPoint> keypoints;
         cv::Mat descriptors;
-        cout<<"reading image: "<<path_to_images[i]<<endl;
+        cout << "reading image: " << path_to_images[i] << endl;
         cv::Mat image = cv::imread(path_to_images[i], 0);
-        if(image.empty())throw std::runtime_error("Could not open image"+path_to_images[i]);
-        cout<<"extracting features"<<endl;
+        if (image.empty())
+            throw std::runtime_error("Could not open image" + path_to_images[i]);
+        cout << "extracting features" << endl;
         fdetector->detectAndCompute(image, cv::Mat(), keypoints, descriptors);
-        features.push_back(descriptors);
-        cout<<"done detecting features"<<endl;
+        features.emplace_back(to_uchar_descriptor_vector(descriptors));
+        cout << "done detecting features" << endl;
     }
     return features;
 }
 
 // ----------------------------------------------------------------------------
 
-void testVocCreation(const vector<cv::Mat> &features)
+void testVocCreation(const vector<vector<TDescriptor>> &features)
 {
     // branching factor and depth levels
     const int k = 9;
@@ -98,15 +130,16 @@ void testVocCreation(const vector<cv::Mat> &features)
     cout << "... done!" << endl;
 
     cout << "Vocabulary information: " << endl
-         << voc << endl << endl;
+         << voc << endl
+         << endl;
 
     // lets do something with this vocabulary
     cout << "Matching images against themselves (0 low, 1 high): " << endl;
     BowVector v1, v2;
-    for(size_t i = 0; i < features.size(); i++)
+    for (size_t i = 0; i < features.size(); i++)
     {
         voc.transform(features[i], v1);
-        for(size_t j = 0; j < features.size(); j++)
+        for (size_t j = 0; j < features.size(); j++)
         {
             voc.transform(features[j], v2);
 
@@ -116,14 +149,15 @@ void testVocCreation(const vector<cv::Mat> &features)
     }
 
     // save the vocabulary to disk
-    cout << endl << "Saving vocabulary..." << endl;
+    cout << endl
+         << "Saving vocabulary..." << endl;
     voc.save("small_voc.yml.gz");
     cout << "Done" << endl;
 }
 
 ////// ----------------------------------------------------------------------------
 
-void testDatabase(const  vector<cv::Mat > &features)
+void testDatabase(const vector<vector<TDescriptor>> &features)
 {
     cout << "Creating a small database..." << endl;
 
@@ -137,18 +171,19 @@ void testDatabase(const  vector<cv::Mat > &features)
     // db creates a copy of the vocabulary, we may get rid of "voc" now
 
     // add images to the database
-    for(size_t i = 0; i < features.size(); i++)
+    for (size_t i = 0; i < features.size(); i++)
         db.add(features[i]);
 
     cout << "... done!" << endl;
 
-    cout << "Database information: " << endl << db << endl;
+    cout << "Database information: " << endl
+         << db << endl;
 
     // and query the database
     cout << "Querying the database: " << endl;
 
     QueryResults ret;
-    for(size_t i = 0; i < features.size(); i++)
+    for (size_t i = 0; i < features.size(); i++)
     {
         db.query(features[i], ret, 4);
 
@@ -169,33 +204,35 @@ void testDatabase(const  vector<cv::Mat > &features)
     // once saved, we can load it again
     cout << "Retrieving database once again..." << endl;
     Database db2("small_db.yml.gz");
-    cout << "... done! This is: " << endl << db2 << endl;
+    cout << "... done! This is: " << endl
+         << db2 << endl;
 }
-
 
 // ----------------------------------------------------------------------------
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
 
-    try{
-        CmdLineParser cml(argc,argv);
-        if (cml["-h"] || argc<=2){
-            cerr<<"Usage:  descriptor_name     image0 image1 ... \n\t descriptors:brisk,surf,orb ,akaze(only if using opencv 3)"<<endl;
-             return -1;
+    try
+    {
+        CmdLineParser cml(argc, argv);
+        if (cml["-h"] || argc <= 2)
+        {
+            cerr << "Usage:  descriptor_name     image0 image1 ... \n\t descriptors:brisk,surf,orb ,akaze(only if using opencv 3)" << endl;
+            return -1;
         }
 
-        string descriptor=argv[1];
+        string descriptor = argv[1];
 
-        auto images=readImagePaths(argc,argv,2);
-        vector< cv::Mat   >   features= loadFeatures(images,descriptor);
+        auto images = readImagePaths(argc, argv, 2);
+        auto features = loadFeatures(images, descriptor);
         testVocCreation(features);
 
-
         testDatabase(features);
-
-    }catch(std::exception &ex){
-        cerr<<ex.what()<<endl;
+    }
+    catch (std::exception &ex)
+    {
+        cerr << ex.what() << endl;
     }
 
     return 0;
