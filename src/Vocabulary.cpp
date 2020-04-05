@@ -701,6 +701,15 @@ void Vocabulary::transform(
     v.normalize(norm);
 }
 
+void Vocabulary::transform(
+    const std::vector<cv::Mat> &features,
+    BowVector &v, FeatureVector &fv, int levelsup) const
+{
+    const auto& features_array = to_uchar_descriptor_vector(features);
+    transform(features_array, v, fv, levelsup);
+
+}
+
 // --------------------------------------------------------------------------
 
 void Vocabulary::transform(
