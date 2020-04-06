@@ -2,11 +2,11 @@
 // #define __D_T_TYPE__
 #pragma once
 
-constexpr int DescLength = 64;
+constexpr int DescLength = 32;
 
 typedef struct
 {
-    unsigned char data[DescLength];
+    unsigned char data[DescLength] = {0};
 } TDescriptor;
 
 inline std::vector<TDescriptor> to_uchar_descriptor_vector(const std::vector<cv::Mat> &desc_mat_vector)

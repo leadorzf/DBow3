@@ -153,6 +153,10 @@ public:
   virtual void transform(const std::vector<TDescriptor> &features,
                          BowVector &v, FeatureVector &fv, int levelsup) const;
 
+  virtual void transform(
+          const std::vector<cv::Mat> &features,
+          BowVector &v, FeatureVector &fv, int levelsup) const;
+
   /**
    * Transforms a single feature into a word (without weight)
    * @param feature
@@ -374,9 +378,6 @@ protected:
   virtual void transform(const TDescriptor &feature,
                          WordId &id, WordValue &weight) const;
 
-  void Vocabulary::transform(
-          const std::vector<cv::Mat> &features,
-          BowVector &v, FeatureVector &fv, int levelsup) const
 
   /**
    * Returns the word id associated to a feature

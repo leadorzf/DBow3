@@ -1,35 +1,55 @@
-INCLUDE_DIRECTORIES(. ./utils/)
+cmake_minimum_required (VERSION 3.0)
 
-FILE(GLOB hdrs_base "*.h" )
-FILE(GLOB srcs_base "*.c*")
+# set(PROJECT_NAME dbow3)
+# project (${PROJECT_NAME})
 
-FILE(GLOB hdrs ${hdrs_base}  )
-FILE(GLOB srcs  ${srcs_base} )
+############# cross compile options ##############
+SET(CMAKE_SYSTEM_NAME Linux)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++14")
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_INSTALL_PREFIX ${PROJECT_PATH}/build-s32v/output)
+###################################################
 
 
-ADD_LIBRARY(${PROJECT_NAME} ${srcs} ${hdrs})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ) 
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES 				# create *nix style library versions + symbolic links
-        DEFINE_SYMBOL DBOW_DSO_EXPORTS
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_SOVERSION}
-	CLEAN_DIRECT_OUTPUT 1 					# allow creating static and shared libs without conflicts
-	OUTPUT_NAME "${PROJECT_NAME}${PROJECT_DLLVERSION}" 	# avoid conflicts between library and binary target names
+# same as gcc -I
+include_directories(
+   include
 )
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${REQUIRED_LIBRARIES} )
+# sources for create target
+set (SRCS
+  ${PUBLIC_H}
+ BowVector.cpp
+ Database.cpp
+ DescManip.cpp
+ FeatureVector.cpp
+ QueryResults.cpp
+ quicklz.c
+ ScoringObject.cpp
+ Vocabulary.cpp
 
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION bin COMPONENT main			# Install the dll file in bin directory
-	LIBRARY DESTINATION ${LIB_INSTALL_DIR} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE COMPONENT main
-        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT main)			# Install the dll.a file in lib directory
+ )
+
+# compile
+add_compile_options ($<$<BOOL:${HAVE_NO_UNNAMED_TYPE_TEMPLATE_ARGS}>:-Wno-unnamed-type-template-args>)
+add_library (${PROJECT_NAME} SHARED ${SRCS} )
 
 
 
-INSTALL(FILES ${hdrs_base}
-        DESTINATION include/${PROJECT_NAME}
-        COMPONENT main)
 
+# define output
+target_include_directories (${PROJECT_NAME} BEFORE PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+  "$<INSTALL_INTERFACE:include>"
+  PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set_target_properties (${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${PUBLIC_H}")
 
-
+# make output
+install (TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}-targets
+  RUNTIME DESTINATION bin
+  PUBLIC_HEADER DESTINATION include/${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
