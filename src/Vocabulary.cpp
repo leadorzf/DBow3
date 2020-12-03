@@ -1067,7 +1067,7 @@ void Vocabulary::save(const std::string &filename,  bool binary_compressed) cons
     if ( filename.find(".yml")==std::string::npos){
         std::ofstream file_out(filename,std::ios::binary);
         if (!file_out) throw std::runtime_error("Vocabulary::saveBinary Could not open file :"+filename+" for writing");
-        toStream(file_out,binary_compressed);
+//         toStream(file_out,binary_compressed);
     }
     else{
         cv::FileStorage fs(filename.c_str(), cv::FileStorage::WRITE);
